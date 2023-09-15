@@ -4,6 +4,7 @@ from datetime import datetime
 from . import app
 from FinMind.data import DataLoader
 from dotenv import load_dotenv
+import yfinance as yf
 import os
 
 load_dotenv()  # Load variables from .env file
@@ -14,7 +15,7 @@ CORS(app)
 
 @app.route("/")
 def home():
-    return "Hello, Flask!"
+    return "Hello, there!"
 
 @app.route("/hello/")
 @app.route("/hello/<name>")
@@ -29,20 +30,37 @@ def hello_there(name = None):
 def stock_info(code = None):
     if code is not None:
         current_year = datetime.now().year
-        range = 20
-        year_gap = current_year - range
+        range = 10 # looking back for 10 years
+        begin_year = current_year - range
         try:
             api = DataLoader()
             api.login_by_token(api_token=finMind_api_token)
-            df = api.taiwan_stock_dividend_result(
+            df = api.taiwan_stock_dividend(
                 stock_id=code,
-                start_date=str(year_gap)+'-01-01',
+                start_date=str(begin_year)+'-01-01',
             )
             json_data = df.to_dict(orient='records')
             return jsonify({
-                'message': 'ok',
+                'message': 'success',
                 'data': json_data,
             })
+        except Exception as e:
+            print("An error occurred:", e)
+            return jsonify({
+                'message': 'error',
+            })
+    return jsonify({'message': 'code required'})
+
+
+@app.route("/yf/<code>")
+def yf_stock_info(code = None):
+    if code is not None:
+        try:
+            date = '2021-01-01'
+            stock_no = str(code)+'.TW'
+            stock = yf.Ticker(stock_no)
+            dividend = stock.dividends
+            print(dividend)
         except Exception as e:
             print("An error occurred:", e)
             return jsonify({
