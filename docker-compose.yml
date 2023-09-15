@@ -1,0 +1,12 @@
+version: '3.4'
+
+services:
+  stockserver:
+    image: stockserver
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - 5002:5002
+    environment:
+      - FinMind_API_TOKEN=${FinMind_API_TOKEN}

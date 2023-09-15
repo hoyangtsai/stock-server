@@ -6,7 +6,7 @@
 			"label": "docker-build",
 			"platform": "python",
 			"dockerBuild": {
-				"tag": "pythonvscodetutorials:latest",
+				"tag": "stockserver:latest",
 				"dockerfile": "${workspaceFolder}/Dockerfile",
 				"context": "${workspaceFolder}",
 				"pull": true
@@ -20,7 +20,7 @@
 			],
 			"dockerRun": {
 				"env": {
-					"FLASK_APP": "hello_app/webapp.py"
+					"FLASK_APP": "stock_app/wsgi.py"
 				}
 			},
 			"python": {
